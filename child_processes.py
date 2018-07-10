@@ -8,7 +8,7 @@ def run_serial_processes(n):
     for _ in range(n):
         proc_1 = subprocess.Popen(['sleep', '0.1'])
         proc_1.communicate()
-    print(f"{n} processes in SERIES took {time()-start :.3f} seconds.")
+    print("{} processes in series took {} seconds".format(n, time() - start))
 
 
 def run_parallel_processes(n):
@@ -16,14 +16,12 @@ def run_parallel_processes(n):
     processes = []
     for _ in range(n):  # start all three processes upfront
         processes.append(subprocess.Popen(['sleep', '0.1']))
-    for proc in processes:  # wait for them to finish their io
-        proc.communicate()
-
-    print(f"{n} processes in PARALLEL took {time()-start :.3f} seconds.")
+    for process in processes:  # wait for them to finish their io
+        process.communicate()
+    print("{} processes in series took {} seconds".format(n, time() - start))
 
 
 if __name__ == '__main__':
-
     run_serial_processes(10)
     print()
     run_parallel_processes(10)

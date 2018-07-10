@@ -18,8 +18,8 @@ def profile(start_times, stop_times, title="Blocking IO in series)"):
     pyplot.xlabel("Seconds")
     pyplot.title(title)
     print("Individual durations:", elapsed)
-    print("Fastest thread: ", min(elapsed))
-    print("Slowest thread: ", max(elapsed))
+    print("Fastest response: ", min(elapsed))
+    print("Slowest response: ", max(elapsed))
     print('Total duration: ', stop_times[-1] - start_times[0])
     pyplot.show()
 

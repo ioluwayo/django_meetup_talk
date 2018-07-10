@@ -2,7 +2,7 @@ import threading
 import wikipedia
 from queue import Queue, Empty
 from time import time
-from Display import profile
+from visualize import profile
 
 THREAD_POOL_SIZE = 10  # threads will continue to pick up work from the que until its empty.
 job_que = Queue()

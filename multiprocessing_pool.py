@@ -1,7 +1,7 @@
 from time import time
 from threading import Thread
 from multiprocessing import Pool
-from Display import profile
+from visualize import profile
 
 POOL_SIZE = 4
 
@@ -91,12 +91,15 @@ def multiprocess_pool_with_context_manager(numbers_list):
 
 
 if __name__ == '__main__':
-    numbers = [i for i in range(1000, 1300)]
-    series_result, series_duration = series(numbers)
-    thread_results, multithread_duration = multithread(numbers)
-    multiprocessing_results, multiprocess_duration = multiprocess_pool_with_context_manager(numbers)
+    numbers = [i for i in range(1000, 2000)]
 
-    print("Series: ", series_duration)
-    print("Threads: ", multithread_duration)
-    print("Multiprocessing: ", multiprocessing_results)
+    series_result, series_duration = series(numbers)
+
+    multithread_results, multithread_duration = multithread(numbers)
+
+    multiprocess_results, multiprocess_duration = multiprocess_pool_with_context_manager(numbers)
+
+    print("Series: ", series_result)
+    print("Threads: ", multithread_results)
+    print("Multiprocessing: ", multiprocess_results)
     profile([series_duration, multithread_duration, multiprocess_duration])
