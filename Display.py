@@ -18,13 +18,12 @@ def profile(starts_stops, title=''):
 
     pyplot.barh(range(len(start_times)), elapsed, left=lefts)
     pyplot.grid(axis="both")
-    pyplot.ylabel("Threads")
+    pyplot.ylabel("Task(s)")
     pyplot.xlabel("Seconds")
     pyplot.title(title)
 
     print('Individual durations: ', elapsed)
     print("Fastest thread: ", min(elapsed))
     print("Slowest thread: ", max(elapsed))
-    print('Total duration: ', max(elapsed))
 
     pyplot.show()

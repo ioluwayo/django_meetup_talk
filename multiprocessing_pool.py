@@ -1,4 +1,9 @@
 from time import time
+from threading import Thread
+from multiprocessing import Pool
+from Display import profile
+
+POOL_SIZE = 4
 
 
 def is_prime(num):
@@ -25,35 +30,73 @@ def get_prime_factors(num):
     return factors
 
 
-if __name__ == '__main__':
-    numbers = [i for i in range(1000, 1500)]
-    total_duration = 0
+class CustomThread(Thread):
+    def __init__(self, *args, **kwargs):
+        Thread.__init__(self, *args, **kwargs)
+        self.result = None
+
+    def run(self):
+        self.result = self._target(*self._args, **self._kwargs)
+
+
+def series(numbers_list):
     start = time()
-    for i in numbers:
-        result = get_prime_factors(i)
+
+    series_results = []
+    for num in numbers_list:
+        series_results.append(get_prime_factors(num))
+
     stop = time()
-    print('Total duration in series: ', stop - start)
+    return series_results, (start, stop)
 
-    from threading import Thread
 
-    threads = []
+def multithread(numbers_list):
     start = time()
-    for n in numbers:
-        thread = Thread(target=get_prime_factors, args=(n,))
+
+    threads_results = []
+    threads = []
+    for n in numbers_list:
+        thread = CustomThread(target=get_prime_factors, args=(n,))
         thread.start()
         threads.append(thread)
     for thread in threads:
         thread.join()
+        threads_results.append(thread.result)
+
     stop = time()
-    print('Total duration with threads: ', stop - start)
+    return threads_results, (start, stop)
 
-    from multiprocessing import Pool
 
+def multiprocess_pool(numbers_list):
     start = time()
-    pool = Pool(processes=3)
-    factors = pool.map(get_prime_factors, numbers)
+
+    pool = Pool(processes=POOL_SIZE)  # initial cost of process creation is pretty high
+    pool_results = pool.map(get_prime_factors, numbers_list)
     pool.close()
-    pool.join()
+    pool.join()  # context manager can also help here
+
     stop = time()
-    print(factors)
-    print("Total duration with multiprocessing: ", stop - start)
+    return pool_results, (start, stop)
+
+
+def multiprocess_pool_with_context_manager(numbers_list):
+    start = time()
+
+    pool_results = []
+    with Pool(processes=POOL_SIZE) as pool:
+        pool_results = pool.map(get_prime_factors, numbers_list)
+
+    stop = time()
+    return pool_results, (start, stop)
+
+
+if __name__ == '__main__':
+    numbers = [i for i in range(1000, 1300)]
+    series_result, series_duration = series(numbers)
+    thread_results, multithread_duration = multithread(numbers)
+    multiprocessing_results, multiprocess_duration = multiprocess_pool_with_context_manager(numbers)
+
+    print("Series: ", series_duration)
+    print("Threads: ", multithread_duration)
+    print("Multiprocessing: ", multiprocessing_results)
+    profile([series_duration, multithread_duration, multiprocess_duration])

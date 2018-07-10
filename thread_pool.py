@@ -4,7 +4,7 @@ from queue import Queue, Empty
 from time import time
 from Display import profile
 
-POOL_SIZE = 10  # threads will continue to pick up work from the que until its empty.
+THREAD_POOL_SIZE = 10  # threads will continue to pick up work from the que until its empty.
 job_que = Queue()
 result_que = Queue()
 durations_que = Queue()
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     for city in cities:
         job_que.put(city)
 
-    for i in range(POOL_SIZE):
+    for i in range(THREAD_POOL_SIZE):
         thread = threading.Thread(target=worker)
         thread.start()
         threads.append(thread)
@@ -55,4 +55,4 @@ if __name__ == '__main__':
     while not durations_que.empty():
         durations.append(durations_que.get())  # earlier threads are most likely to pick up extra jobs
 
-    profile(starts_stops=durations, title='Thread pools')
+    profile(starts_stops=durations, title='Blocking IO with Thread pools')

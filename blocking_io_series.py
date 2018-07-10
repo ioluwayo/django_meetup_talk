@@ -4,7 +4,7 @@ import wikipedia
 from matplotlib import pyplot
 
 
-def profile(start_times, stop_times, title="Blocking IO without Threads (Synchronous)"):
+def profile(start_times, stop_times, title="Blocking IO in series)"):
     elapsed = [s2 - s1 for s1, s2 in zip(start_times, stop_times)]
 
     lefts = [0]
@@ -27,9 +27,11 @@ def profile(start_times, stop_times, title="Blocking IO without Threads (Synchro
 if __name__ == '__main__':
     cities = ['Lagos', 'London', 'Manchester', 'Paris', 'Shanghai', 'Ife', 'Toronto', 'Boston', 'Munich', 'Monaco',
               'Seattle', 'Athens', 'Dundee', 'Lisbon', 'Tokyo']
+
     summaries = []
     starts = []
     stops = []
+
     for city in cities:
         starts.append(time.time())
         summaries.append(wikipedia.summary(city))
