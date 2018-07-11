@@ -39,7 +39,7 @@ class CustomThread(Thread):
         self.result = self._target(*self._args, **self._kwargs)
 
 
-def series(numbers_list):
+def run_series(numbers_list):
     start = time()
 
     series_results = []
@@ -50,7 +50,7 @@ def series(numbers_list):
     return series_results, (start, stop)
 
 
-def multithread(numbers_list):
+def run_threads(numbers_list):
     start = time()
 
     threads_results = []
@@ -67,43 +67,13 @@ def multithread(numbers_list):
     return threads_results, (start, stop)
 
 
-def multiprocess_pool(numbers_list):
-    start = time()
-
-    pool = Pool(processes=POOL_SIZE)  # initial cost of process creation is pretty high
-    pool_results = pool.map(get_prime_factors, numbers_list)
-    pool.close()
-    pool.join()  # context manager can also help here
-
-    stop = time()
-    return pool_results, (start, stop)
-
-
-def multiprocess_pool_with_context_manager(numbers_list):
-    start = time()
-
-    pool_results = []
-    with Pool(processes=POOL_SIZE) as pool:
-        pool_results = pool.map(get_prime_factors, numbers_list)
-
-    stop = time()
-    return pool_results, (start, stop)
-
-
 if __name__ == '__main__':
-    numbers = [i for i in range(1000, 2000)]  # multiple processes does not lead speed up
-    # numbers = [i for i in range(1000, 25000)]  # initial cost of spinning up processes is now worth it
-    series_result, series_duration = series(numbers)
+    numbers = [i for i in range(1000, 1006)]
 
-    multithread_results, multithread_duration = multithread(numbers)
+    series_result, series_duration = run_series(numbers)
 
-    multiprocess_results, multiprocess_duration = multiprocess_pool_with_context_manager(numbers)
+    thread_results, thread_durations = run_threads(numbers)  # this should be faster right?
 
-    # print("Series: ", series_result)
-    # print("Threads: ", multithread_results)
-    # print("Multiprocessing: ", multiprocess_results)
-
-    print()
-
-    profile([series_duration, multithread_duration, multiprocess_duration],
-            labels=['Series', 'Threads', 'Multiprocess'])
+    print("Series: ", series_result)
+    print("Threads: ", thread_results)
+    profile([series_duration, thread_durations], labels=['Series', 'Thread'], colors=['r', 'y'])

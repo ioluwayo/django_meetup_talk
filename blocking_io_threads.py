@@ -11,9 +11,10 @@ def get_city_summary(query_city, sumarries_list, durations_list, index):
     stop = time.time()
     durations_list[index] = (start, stop)
 
-    if __name__ == '__main__':
-        cities = ['Lagos', 'London', 'Manchester', 'Paris', 'Shanghai', 'Ife', 'Toronto', 'Boston', 'Munich', 'Monaco',
-                  'Seattle', 'Athens', 'Dundee', 'Lisbon', 'Tokyo']
+
+if __name__ == '__main__':
+    cities = ['Lagos', 'London', 'Manchester', 'Paris', 'Shanghai', 'Ife', 'Toronto', 'Boston', 'Munich', 'Monaco',
+              'Seattle', 'Athens', 'Dundee', 'Lisbon', 'Tokyo']
 
     threads = []
     summaries = [0 for _ in range(len(cities))]  # shared memory space between threads
@@ -21,8 +22,8 @@ def get_city_summary(query_city, sumarries_list, durations_list, index):
 
     for i in range(len(cities)):  # unbounded number of threads.
         thread = threading.Thread(target=get_city_summary, args=(cities[i], summaries, durations, i))
-    thread.start()
-    threads.append(thread)
+        thread.start()
+        threads.append(thread)
 
     for t in threads:
         t.join()  # wait for each thread to finish

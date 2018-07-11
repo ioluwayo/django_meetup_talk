@@ -12,7 +12,7 @@ durations_que = Queue()
 
 def worker():
     start = time()  # we are timing each thread. Not each job
-    stop = time()
+    stop = start  # if there are no more jobs in the que then this never gets overridden
     while not job_que.empty():  # if the que is not empty. pick up the next job
         try:  # still need to catch Empty Exception...another thread could take over control before retrieving item
             job = job_que.get()
@@ -55,4 +55,4 @@ if __name__ == '__main__':
     while not durations_que.empty():
         durations.append(durations_que.get())  # earlier threads are most likely to pick up extra jobs
 
-    profile(starts_stops=durations, title='Blocking IO with Thread pools')
+    profile(starts_stops=durations, title='Blocking IO with fixed number of Threads')
